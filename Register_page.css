@@ -1,0 +1,30 @@
+#general {
+	width: 930px;
+	margin: 0 auto;
+	background-color: lightblue;
+	border-radius: 1%;
+}
+.verticalLine {
+	width: 400px;
+	margin: 0 auto;
+}
+.inputFieldforRegister {
+	width: 400px;
+	height: 40px;
+	border-color: gray; 
+	border-bottom: solid green;
+}
+#buttonForRegister {
+	width: 400px;
+	height: 30px;
+	border-radius: 200px;
+	background-color: white;
+	border-color: grey;
+	margin-top: 30px;
+}
+#signIn {
+	margin-top: 30px;
+	margin-left: 57%;
+}
+
+

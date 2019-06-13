@@ -1,0 +1,36 @@
+#generalBlock {
+	width: 1030px;
+	margin: 0 auto;
+	background-color: lightblue;
+	border-radius: 1%; 
+}
+.vertical {
+	width: 400px;
+	margin: 0 auto;
+}
+.inputField {
+	width: 300px;
+	height: 30px;
+	border-radius: 150px; 
+	border-color: gray;
+	background-color: white;
+}
+#logInButton {
+	width: 50px;
+	height: 30px;
+	border-radius: 23px; 
+	background-color: white; 
+	margin-left: 250px;
+	border-color: gray;
+}
+#checkbox {
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	background-color: white;
+	border-color: gray;
+}
+#linkForRegister {
+	margin-top: 30px;
+
+}
