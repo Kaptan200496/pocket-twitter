@@ -1,2 +1,12 @@
 CREATE TABLE users (id INTEGER(64) UNSIGNED AUTO_INCREMENT PRIMARY KEY, login VARCHAR(32), password VARCHAR(32), date DATETIME;
 CREATE TABLE login_attemps (id INTEGER(64) UNSIGNED AUTO_INCREMENT PRIMARY KEY, login VARCHAR(32), date DATETIME, active INTEGER(1) DEFAULT 1;
+CREATE TABLE users (id INTEGER(64), login VARCHAR(32), email VARCHAR(32), id_img INTEGER(64), hash_with_salt VARCHAR(32), salt CHAR(32), time_registration INTEGER(64), active INTEGER(1), user_rights ENUM('user' , 'administrator'), time_last_modify INTEGER(64));
+CREATE TABLE login_attempts (id INTEGER(64), login VARCHAR(32), attempts_time INTEGER(64), successful_attempts INTEGER(1), ip VARCHAR(32), user_agent VARCHAR(32));
+CREATE TABLE session (id INTEGER(64), user_id INTEGER(64), token CHAR(32), time_create_session INTEGER(64), time_session_end INTEGER(64), time_update_session INTEGER(64), active_session INTEGER(1));
+CREATE TABLE tweets (id INTEGER(64), id_autor INTEGER(64), tweet_id INTEGER(64), tweet_text VARCHAR(32), id_img INTEGER(64), active_tweet INTEGER(1), time_create INTEGER(64), time_update INTEGER(64));
+CREATE TABLE picture (id INTEGER(64), id_autor INTEGER(64), file_name VARCHAR(32), time_create INTEGER(64), time_update INTEGER(64), activity_pictures INTEGER(1) DEFAULT 1);
+CREATE TABLE subscribers (id INTEGER(64), subscribers_id INTEGER(64), id_who_subscribed INTEGER(64), date_create INTEGER(64), update_date INTEGER(64), subscriber_activity INTEGER(1) DEFAULT 1);
+CREATE TABLE hashtag (id INTEGER(64), text VARCHAR(32), time_creat INTEGER(64), update_time INTEGER(64), active INTEGER(1));
+CREATE TABLE appearance_hashtag (id INTEGER(64), tweet_id INTEGER(64), hashtag_id INTEGER(64), active INTEGER(1));
+CREATE TABLE notifications (id INTEGER(64), user_id INtEGER(64), notification_read INTEGER(1), text_notification VARCHAR(32), date_create INTEGER(64), update_date INTEGER(64), active INTEGER(1));
+ 
