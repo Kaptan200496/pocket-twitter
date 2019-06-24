@@ -54,18 +54,15 @@ class User {
 		$requestJson = file_get_contents("php://input");
 		$logInObject = new LoginRequestData($requestJson);
 		$userObject = User::getUserFromDB($logInObject->login);
-		$signInTime = time();
-		$successful = $logInObject->password == $userObject->password;
+		$receivedPasswordHash = sha1($logInObject->password . $userObject->salt);
+		$successful = $receivedPasswordHash == $userObject->hash_with_salt;
 		$successfulInt = intval($successful);
-		$tableName = "login_attemps";
-		$attemptInsertion = "INSERT INTO {$tableName} (
+		$attemptInsertion = "INSERT INTO login_attempts (
 			login,
-			loginDate,
-			active
+			successful
 		)
 		VALUES (
 			'{$logInObject->login}',
-			{$signInTime},
 			{$successfulInt}
 		)";
 		
@@ -83,14 +80,37 @@ class User {
 			print( json_encode($errorInfo, JSON_PRETTY_PRINT) );
 		}
 
+		if($successful) {
+			self::CreateCookie($userObject);
+		}
+
 		return $successful;
+	}	
+
+	public static function CreateCookie($userObject) {
+		$sessionObject = new Session();
+		$sessionObject->user = $userObject;
+		$sessionObject->token = self::generate_uuid();
+		$sqlExpression = "
+			INSERT INTO sessions (
+				user,
+				token
+			)
+			VALUES (
+				{$sessionObject->user->id},
+				'{$sessionObject->token}'
+			)
+		";
+		$secondsInWeek = 3600 * 24 * 7;
+		$cookieExpirationTime = time() + $secondsInWeek;
+		setcookie("token", $sessionObject->token, $cookieExpirationTime);
+
 	}
 
 
 	private static function getUserFromDB($login) {
-		$tableName = "users";
 		$selectUser = "
-			SELECT * FROM {$tableName} WHERE login = '{$login}'
+			SELECT * FROM users WHERE login = '{$login}'
 		";
 		
 		$dbResponse = DB::$connection->query($selectUser);
@@ -112,34 +132,55 @@ class User {
 		$userObject = self::insertUserIntoDB($registrationObject);
 	}
 
+	public static function generate_uuid() {
+	$hexadecimalString = "";
+
+	for($i = 0; $i < 32; $i++) {
+		$hexadecimalString .= dechex(random_int(0, 15));
+	}
+
+	$splitHexadecimalString = array(
+		substr($hexadecimalString, 0, 8),
+		substr($hexadecimalString, 8, 4),
+		substr($hexadecimalString, 12, 4),
+		substr($hexadecimalString, 16, 4),
+		substr($hexadecimalString, 20, 12)
+	);
+
+	$uuid = implode("-", $splitHexadecimalString);
+	return $uuid;
+	}
+
 	private static function insertUserIntoDB($userData) {
 		$tableName = "users";
-		$timeStamp = time();
-		$loginName = $userData->login;
+		$salt =  self::generate_uuid();
+		$password = $userData->password;
+		$hash_with_salt = sha1($userData->password . $salt);
 		$checkLogin = "
-			SELECT login FROM {$tableName} WHERE login = '{$loginName}'
+			SELECT login FROM users WHERE login = '{$userData->login}'
 		";
 		$insertObject = "
-					INSERT INTO {$tableName} (
-					login,
-					password,
-					email,
-					date
-					)
-					VALUES (
-						'{$loginName}',
-						'{$userData->password}',
-						'{$userData->email}',
-						{$timeStamp}
-					)
-				";
+			INSERT INTO {$tableName} (
+				login,
+				password_hash,
+				email,
+				salt
+			)
+			VALUES (
+				'{$userData->login}',
+				'{$hash_with_salt}',
+				'{$userData->email}',
+				'{$salt}'
+			)
+		";
+
 		$dbResponse = DB::$connection->query($checkLogin);
-			if($dbResponse->num_rows == 0) {
-				DB::$connection->query($insertObject);
-			}
-			else {
-				print("This login is busy");
-			}
+		if($dbResponse->num_rows == 0) {
+			DB::$connection->query($insertObject);
+		}
+		else {
+			print("This login is busy");
+		}
 	}
 }
 

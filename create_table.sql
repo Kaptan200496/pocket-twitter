@@ -6,7 +6,7 @@ CREATE TABLE users (
 	login VARCHAR(32) NOT NULL,
 	email VARCHAR(320),
 	-- id изображения аватарки
-	avatar_id INTEGER(64) UNSIGNED,
+	avatar INTEGER(64) UNSIGNED,
 	-- SHA1 хэш (40 символов)
 	password_hash VARCHAR(40),
 	-- UUID (36 символов)
@@ -33,7 +33,7 @@ CREATE TABLE login_attempts (
 CREATE TABLE sessions (
 	id INTEGER(64) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-	user_id INTEGER(64) UNSIGNED,
+	user INTEGER(64) UNSIGNED,
 	-- 36 символов UUID
 	token VARCHAR(36),
 
@@ -58,7 +58,7 @@ CREATE TABLE tweets (
 CREATE TABLE images (
 	id INTEGER(64) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-	author_id INTEGER(64) UNSIGNED,
+	author INTEGER(64) UNSIGNED,
 	file_name VARCHAR(32),
 	
 	created INTEGER(64) DEFAULT UNIX_TIMESTAMP(CURRENT_TIMESTAMP),
@@ -89,8 +89,8 @@ CREATE TABLE hashtags (
 CREATE TABLE hashtag_appearances (
 	id INTEGER(64) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-	tweet_id INTEGER(64) UNSIGNED,
-	hashtag_id INTEGER(64) UNSIGNED,
+	tweet INTEGER(64) UNSIGNED,
+	hashtag INTEGER(64) UNSIGNED,
 
 	active INTEGER(1) DEFAULT 1
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -98,7 +98,7 @@ CREATE TABLE hashtag_appearances (
 CREATE TABLE notifications (
 	id INTEGER(64) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-	user_id INTEGER(64),
+	user INTEGER(64),
 	read INTEGER(1) DEFAULT 0,
 	text TEXT,
 	

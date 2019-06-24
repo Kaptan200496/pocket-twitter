@@ -2,7 +2,7 @@
 class Session {
 	public $id;
 
-	public $user_id;
+	public $user;
 	public $token;
 
 	public $created;

@@ -1,5 +1,5 @@
 <?php 
-class Notificatio {
+class Notification {
 	public $id;
 
 	public $user_id;
