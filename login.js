@@ -11,10 +11,13 @@ loginButton.onclick = function() {
 	var checkBoxValue = document.getElementById("checkbox").checked;
 	// Создаем объект JSON который имеет поля со значениями введенных данных
 	var JSONobject = {
-		login: loginValue,
-		password: passwordValue,
-		remember_me: checkBoxValue
-	}
+		function: session/login,
+		parameters: {
+				login: loginValue,
+				password: passwordValue,
+				remember_me: checkBoxValue
+			}
+		}
 	// Создаем переменную которая будет содержать этот объект в формате JSON
  	var requestJSON = JSON.stringify(JSONobject);
  	// Вызываем функцию которой передаем значение выше созданого объекта JSON
@@ -25,7 +28,7 @@ var serverRequest = function(requestJSON) {
 
 	var request = new XMLHttpRequest();
 	// открываем запрос и передаем ему параметры
-	request.open("POST", "login.php", true);
+	request.open("POST", "endpoint.php", true);
 	// проверяем готовность обработки запроса
 	request.onreadystatechange = function() {
 		if(request.readyState == XMLHttpRequest.DONE) {
